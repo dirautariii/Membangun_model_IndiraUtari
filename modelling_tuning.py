@@ -1,19 +1,22 @@
+import os
 import pandas as pd
-import dagshub
 import mlflow
 import mlflow.sklearn
-
 
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, f1_score, ConfusionMatrixDisplay
 import matplotlib.pyplot as plt
 
-dagshub.init(
-    repo_owner="dirautariii",
-    repo_name="Membangun_model",
-    mlflow=True
-)
+USE_DAGSHUB = os.getenv("USE_DAGSHUB", "false").lower() == "true"
+
+if USE_DAGSHUB:
+    import dagshub
+    dagshub.init(
+        repo_owner="dirautariii",
+        repo_name="Membangun_model",
+        mlflow=True
+    )
 
 df = pd.read_csv("dataset_preprocessing/train_clean.csv")
 

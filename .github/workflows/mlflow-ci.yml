@@ -25,7 +25,5 @@ jobs:
           pip install dagshub mlflow
 
       - name: Run model training with MLflow + DagsHub
-        env:
-          DAGSHUB_TOKEN: ${{ secrets.DAGSHUB_TOKEN }}
         run: |
           python modelling_tuning.py
