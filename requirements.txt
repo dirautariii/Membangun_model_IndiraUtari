@@ -5,4 +5,3 @@ matplotlib
 seaborn
 mlflow==2.19.0
 dagshub
-*
