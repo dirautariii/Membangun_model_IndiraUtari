@@ -2,7 +2,7 @@ import pandas as pd
 import dagshub
 import mlflow
 import mlflow.sklearn
-import os
+
 
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.ensemble import RandomForestClassifier
@@ -12,8 +12,7 @@ import matplotlib.pyplot as plt
 dagshub.init(
     repo_owner="dirautariii",
     repo_name="Membangun_model",
-    mlflow=True,
-    token=os.environ.get("DAGSHUB_USER_TOKEN")
+    mlflow=True
 )
 
 df = pd.read_csv("dataset_preprocessing/train_clean.csv")
