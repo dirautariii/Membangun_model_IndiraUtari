@@ -8,7 +8,7 @@ from prometheus_client import (
     Counter, Histogram, Gauge, generate_latest
 )
 
-MODEL_PATH = r"C:\Users\INDRA\Membangun_model\mlruns\0\073bbb893e3742b2910137e64ca29b77\artifacts\model"
+MODEL_PATH = r"C:\Users\INDRA\Membangun_model\mlruns\0\5b05c39c9ec046a6af4b17ea43c3eb49\artifacts\model"
 model_load_start = time.time()
 model = mlflow.pyfunc.load_model(MODEL_PATH)
 MODEL_LOAD_TIME = time.time() - model_load_start

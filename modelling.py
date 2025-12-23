@@ -6,6 +6,8 @@ from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, f1_score
 
+mlflow.sklearn.autolog()
+
 df = pd.read_csv("dataset_preprocessing/train_clean.csv")
 
 X = df.drop(columns=["NObeyesdad"])
@@ -26,12 +28,6 @@ with mlflow.start_run(run_name="baseline_random_forest"):
 
     acc = accuracy_score(y_test, y_pred)
     f1 = f1_score(y_test, y_pred, average="weighted")
-
-    mlflow.log_param("model", "RandomForestClassifier")
-    mlflow.log_metric("accuracy", acc)
-    mlflow.log_metric("f1_score", f1)
-
-    mlflow.sklearn.log_model(model, "model")
 
     print("Accuracy:", acc)
     print("F1-score:", f1)
