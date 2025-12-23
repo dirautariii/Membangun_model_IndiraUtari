@@ -32,19 +32,27 @@ X_train, X_test, y_train, y_test = train_test_split(
 )
 
 param_grid = {
-    "n_estimators": [50, 100],
-    "max_depth": [10, 20],
+    "n_estimators": [300, 500],
+    "max_depth": [None, 30],
+    "min_samples_split": [2],
+    "min_samples_leaf": [1, 2],
+    "max_features": ["sqrt", "log2"],
+    "bootstrap": [True],
 }
 
-with mlflow.start_run(run_name="random_forest_tuning"):
-    model = RandomForestClassifier(random_state=42)
+with mlflow.start_run(run_name="random_forest_tuning_optimized"):
+    model = RandomForestClassifier(
+        random_state=42,
+        class_weight="balanced"
+    )
 
     grid = GridSearchCV(
-        model,
+        estimator=model,
         param_grid=param_grid,
         cv=3,
         scoring="f1_weighted",
-        n_jobs=-1
+        n_jobs=1,
+        verbose=1
     )
 
     grid.fit(X_train, y_train)
@@ -56,14 +64,13 @@ with mlflow.start_run(run_name="random_forest_tuning"):
     acc = accuracy_score(y_test, y_pred)
     f1 = f1_score(y_test, y_pred, average="weighted")
 
-    mlflow.log_param("n_estimators", grid.best_params_["n_estimators"])
-    mlflow.log_param("max_depth", grid.best_params_["max_depth"])
-
+    mlflow.log_params(grid.best_params_)
     mlflow.log_metric("accuracy", acc)
     mlflow.log_metric("f1_score", f1)
 
     mlflow.sklearn.log_model(best_model, "model")
 
+    # Confusion Matrix
     disp = ConfusionMatrixDisplay.from_estimator(
         best_model, X_test, y_test
     )
@@ -72,6 +79,7 @@ with mlflow.start_run(run_name="random_forest_tuning"):
     mlflow.log_artifact("confusion_matrix.png")
     plt.close()
 
+    # Feature Importance
     feature_importance = pd.DataFrame({
         "feature": X.columns,
         "importance": best_model.feature_importances_
